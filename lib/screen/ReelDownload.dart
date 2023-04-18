@@ -4,19 +4,19 @@ import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 
 class VideoDownloader extends StatefulWidget {
-  final String videoUrl;
-  final String name;
+  late String videoUrl;
+  late String name;
   VideoDownloader({Key? key, required this.videoUrl, required this.name})
       : super(key: key);
 
   @override
-  _VideoDownloaderState createState() => _VideoDownloaderState();
+  VideoDownloaderState createState() => VideoDownloaderState();
 }
 
-class _VideoDownloaderState extends State<VideoDownloader> {
+class VideoDownloaderState extends State<VideoDownloader> {
   bool _isDownloading = false;
-  late String _progressString = "1";
-
+  String _progressString = '0';
+  String buttonLabel = "Download Video";
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -36,7 +36,7 @@ class _VideoDownloaderState extends State<VideoDownloader> {
               onPressed: () {
                 downloadVideo();
               },
-              child: Text('Download Video'),
+              child: Text(buttonLabel),
             ),
           ],
         ),
@@ -53,35 +53,29 @@ class _VideoDownloaderState extends State<VideoDownloader> {
 
     try {
       String videoName = widget.name;
-      final directory = "/storage/emulated/0/Download/";
+      const directory = "/storage/emulated/0/Download";
       String videoPath = '$directory/$videoName';
 
-      print(videoPath);
-      // final appDocDir = await getExternalStorageDirectory();
-      // Directory appDocDir = await getExternalStorageDirectory();
-      // String appDocPath = appDocDir.path;
-      // String videoPath = '$appDocPath/$videoName';
       await dio.download(widget.videoUrl, videoPath,
           onReceiveProgress: (receivedBytes, totalBytes) {
         if (totalBytes != -1) {
           setState(() {
             _progressString =
                 '${((receivedBytes / totalBytes) * 100).toStringAsFixed(0)}% downloaded';
-            print(_progressString);
           });
         }
       });
       setState(() {
         _isDownloading = false;
         _progressString = 'Video downloaded successfully!';
-        print(_progressString);
+        buttonLabel = "Completed";
       });
     } catch (e) {
       setState(() {
         _isDownloading = false;
         _progressString = 'Error downloading video.';
+        buttonLabel = "Retry";
       });
-      print(e);
     }
   }
 }
