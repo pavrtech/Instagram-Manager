@@ -1,11 +1,10 @@
 import 'dart:convert';
-import 'dart:io';
-import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import "package:flutter/material.dart";
 import 'package:http/http.dart' as http;
-import 'package:path_provider/path_provider.dart';
+import 'package:sweet_nav_bar/sweet_nav_bar.dart';
 import 'ReelDownload.dart';
 import 'about.dart';
+import 'package:simple_gradient_text/simple_gradient_text.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -15,7 +14,17 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  // Controller for updating imageId variable when user enter text.
+  final List<Widget> _items = [
+    const Text('Home'),
+    const Text('Business'),
+    const Text('School'),
+  ];
+
+  int cIndex = 0;
+  final iconLinearGradiant = List<Color>.from([
+    const Color.fromARGB(255, 251, 2, 197),
+    const Color.fromARGB(255, 72, 3, 80)
+  ]);
 
   final myController = TextEditingController();
   late String imageId;
@@ -52,12 +61,9 @@ class _HomeState extends State<Home> {
     final response = await http.get(
       Uri.parse(responseUrl),
     );
-    print(responseUrl);
     if (response.statusCode == 200) {
       final responseBody = jsonDecode(response.body);
-      print(responseBody["videos"][0]["url"]);
       reelUrl = responseBody["videos"][0]["url"];
-      print(reelUrl);
       return (reelUrl);
     } else {
       return ("Error: ${response.statusCode} ${response.reasonPhrase}");
@@ -78,21 +84,8 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar: CurvedNavigationBar(
-          backgroundColor: Colors.transparent,
-          color: Color.fromRGBO(89, 102, 221, 1),
-          //buttonBackgroundColor: Colors.deepPurpleAccent,
-          animationDuration: Duration(milliseconds: 300),
-          items: [
-            Icon(
-              Icons.home,
-            ),
-            Icon(Icons.download),
-            Icon(Icons.person_2),
-          ]),
-      //drawer: NavDrawer(),
       appBar: AppBar(
-        title: Text(
+        title: const Text(
           "INST NXT",
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
@@ -103,73 +96,102 @@ class _HomeState extends State<Home> {
               MaterialPageRoute(builder: (context) => NavDrawer()),
             ); /* Write listener code here */
           },
-          child: Icon(
+          child: const Icon(
             Icons.menu, // add custom icons also
           ),
         ),
         toolbarHeight: 90,
       ),
+      bottomNavigationBar: SweetNavBar(
+        boxShadow: [
+          BoxShadow(
+              color: Colors.black.withOpacity(0.8),
+              blurRadius: 10,
+              offset: const Offset(0, 5))
+        ],
+        paddingGradientColor: const LinearGradient(colors: [
+          Color.fromARGB(255, 72, 3, 80),
+          Color.fromARGB(255, 72, 3, 80)
+        ]),
+        currentIndex: cIndex,
+        paddingBackgroundColor: Colors.transparent,
+        items: [
+          SweetNavBarItem(
+              sweetActive: const Icon(Icons.home),
+              sweetIcon: const Icon(
+                Icons.home_outlined,
+              ),
+              sweetLabel: 'Home',
+              iconColors: iconLinearGradiant,
+              sweetBackground: Colors.red),
+          SweetNavBarItem(
+              sweetIcon: const Icon(Icons.download), sweetLabel: 'Business'),
+          SweetNavBarItem(
+              sweetIcon: const Icon(Icons.person_2), sweetLabel: 'School'),
+        ],
+        onTap: (index) {
+          setState(() {
+            cIndex = index;
+          });
+        },
+      ),
       body: SingleChildScrollView(
         child: Column(
-          //mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Container(
               height: 10,
             ),
             Center(
               child: Container(
+                margin: const EdgeInsets.fromLTRB(5, 0, 5, 0),
                 height: 200,
-                width: 390,
-
-                // width: 200,
-
+                width: 400,
                 decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(5),
-                    gradient: LinearGradient(
-                      begin: Alignment.topRight,
-                      end: Alignment.bottomLeft,
-                      colors: [
-                        Color.fromRGBO(226, 68, 123, 1),
-                        Color.fromRGBO(87, 106, 230, 1),
-                      ],
-                    )
-
-                    //color: Colors.blue,
-                    /*image: Image.asset(
-                        "assets/instagram-hex-colors-gradient-background.png")*/
-                    ),
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(
+                    color: Colors.grey.shade300,
+                    width: 0.5,
+                  ),
+                ),
                 child: Column(
                   children: [
-                    Container(
-                      height: 50,
+                    const SizedBox(
+                      height: 50.0,
                     ),
-                    Text(
-                      "Unlock the full potential of Instagram with",
-                      style: TextStyle(
-                          fontSize: 19,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white),
+                    GradientText(
+                      "Unlock the full potential of Instagram",
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 21.5,
+                      ),
+                      colors: const [
+                        Colors.blue,
+                        Colors.red,
+                        Colors.teal,
+                        Colors.purple,
+                      ],
                     ),
-                    Text(
-                      "just a tap - download reels, stories, and",
+                    const Text(
+                      "with just a tap-download reels,",
                       style: TextStyle(
-                          fontSize: 19,
+                          fontSize: 21,
                           fontWeight: FontWeight.bold,
-                          color: Colors.white),
+                          color: Colors.black),
+                      textAlign: TextAlign.center,
                     ),
-                    Text(
-                      "browse profiles like a pro with our cutting",
+                    const Text(
+                      "stories, and browse profiles like ",
                       style: TextStyle(
-                          fontSize: 19,
+                          fontSize: 21,
                           fontWeight: FontWeight.bold,
-                          color: Colors.white),
+                          color: Colors.black),
                     ),
-                    Text(
-                      "-edge app.",
+                    const Text(
+                      "with our cutting-edge app.",
                       style: TextStyle(
-                          fontSize: 19,
+                          fontSize: 21,
                           fontWeight: FontWeight.bold,
-                          color: Colors.white),
+                          color: Colors.black),
                     ),
                   ],
                 ),
@@ -184,47 +206,29 @@ class _HomeState extends State<Home> {
               child: TextField(
                 controller: myController,
                 decoration: InputDecoration(
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(
-                      //color: Colors.deepPurple,
-                      color: Colors.grey,
-                      width: 1,
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: const BorderSide(
+                        //color: Colors.deepPurple,
+                        color: Colors.grey,
+                        width: 1,
+                      ),
+                      borderRadius: BorderRadius.circular(50.0),
                     ),
-                    borderRadius: BorderRadius.circular(50.0),
-                  ),
-                  labelText: "Paste Link Here.............",
-                ),
+                    hintText: "Paste the link here"),
               ),
             ),
             Container(
               height: 40,
             ),
-            /*ElevatedButton(
-              onPressed: () async {
-                await callApi(imageId);
-                navigateToNewPage(context);
-              },
-              //child: Text("Download Reel"),
-              style: ElevatedButton.styleFrom(
-                primary: Colors.deepPurple,
-                onPrimary: Colors.white,
-                elevation: 10, // Elevation
-                shadowColor: Colors.deepPurpleAccent, // Shadow Color
-              ),
-              child: const Text(
-                'Download Reel',
-                style: TextStyle(fontSize: 18),
-              ),
-            ),*/
             Center(
-              child: Container(
+              child: SizedBox(
                 height: 50,
                 width: 370,
                 child: ElevatedButton.icon(
-                  label: Text("Click here to Download",
+                  label: const Text("Click here to Download",
                       style:
                           TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                  icon: Icon(
+                  icon: const Icon(
                     Icons.download,
                     size: 35,
                   ),
@@ -232,27 +236,13 @@ class _HomeState extends State<Home> {
                     await callApi(imageId);
                     navigateToNewPage(context);
                   },
-                  //child: Text("Download Reel"),
                   style: ElevatedButton.styleFrom(
-                    primary: Color.fromRGBO(87, 106, 230, 1),
+                    primary: const Color.fromRGBO(87, 106, 230, 1),
                     onPrimary: Colors.white,
                     elevation: 10, // Elevation
                     shadowColor: Colors.black, // Shadow Color
                   ),
-                  /*child: const Text(
-                    'Click here to Download',
-                    style: TextStyle(fontSize: 18),
-                  ),*/
                 ),
-
-                // width: 200,
-                /*
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(30),
-                  color: Colors.blue,
-                ),*/
-
-                //child: Text("   \n  Here"),
               ),
             ),
             Container(
@@ -268,54 +258,46 @@ class _HomeState extends State<Home> {
                     height: 50,
                     width: 185,
                     child: ElevatedButton.icon(
-                      label: Text("How To Use",
+                      label: const Text("How To Use",
                           style: TextStyle(
                               fontSize: 16, fontWeight: FontWeight.bold)),
-                      icon: Icon(
+                      icon: const Icon(
                         Icons.help,
                         size: 35,
                       ),
                       onPressed: () {},
                       //child: Text("Download Reel"),
                       style: ElevatedButton.styleFrom(
-                        primary: Color.fromRGBO(185, 99, 100, 1),
+                        primary: const Color.fromRGBO(185, 99, 100, 1),
                         onPrimary: Colors.white,
                         elevation: 10, // Elevation
                         shadowColor: Colors.black, // Shadow Color
                       ),
-                      /*child: const Text(
-                        'Click here to Download',
-                        style: TextStyle(fontSize: 18),
-                      ),*/
                     )),
                 Container(
                   width: 10,
                 ),
-                Container(
+                SizedBox(
                     height: 50,
                     width: 185,
                     child: ElevatedButton.icon(
-                      label: Text("DP Downloader",
+                      label: const Text("DP Downloader",
                           style: TextStyle(
                               fontSize: 16, fontWeight: FontWeight.bold)),
-                      icon: Icon(
+                      icon: const Icon(
                         Icons.person_2_outlined,
                         size: 35,
                       ),
                       onPressed: () {},
                       //child: Text("Download Reel"),
                       style: ElevatedButton.styleFrom(
-                        primary: Color.fromRGBO(185, 167, 117, 1),
+                        primary: const Color.fromRGBO(185, 167, 117, 1),
                         onPrimary: Colors.white,
                         elevation: 10, // Elevation
                         shadowColor: Colors.black, // Shadow Color
                       ),
-                      /*child: const Text(
-                        'Click here to Download',
-                        style: TextStyle(fontSize: 18),
-                      ),*/
                     )),
-                Container(
+                const SizedBox(
                   width: 5,
                 ),
               ],
