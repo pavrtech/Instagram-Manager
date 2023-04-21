@@ -3,7 +3,7 @@ import "package:flutter/material.dart";
 import 'package:http/http.dart' as http;
 import 'package:sweet_nav_bar/sweet_nav_bar.dart';
 import 'ReelDownload.dart';
-import 'about.dart';
+//import 'about.dart';
 import 'package:simple_gradient_text/simple_gradient_text.dart';
 
 class Home extends StatefulWidget {
@@ -88,17 +88,6 @@ class _HomeState extends State<Home> {
         title: const Text(
           "INST NXT",
           style: TextStyle(fontWeight: FontWeight.bold),
-        ),
-        leading: GestureDetector(
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => NavDrawer()),
-            ); /* Write listener code here */
-          },
-          child: const Icon(
-            Icons.menu, // add custom icons also
-          ),
         ),
         toolbarHeight: 90,
       ),
