@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:reeldownloader/screen/HomePage.dart';
 
-import 'UI/appbar.dart';
-import 'UI/nav_bar.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
