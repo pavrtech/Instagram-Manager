@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:reeldownloader/screen/HomePage.dart';
 
+import 'UI/download_page.dart';
+import 'UI/profile_details.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
