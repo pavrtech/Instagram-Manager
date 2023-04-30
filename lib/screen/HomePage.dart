@@ -291,6 +291,40 @@ class _HomeState extends State<Home> {
                 ),
               ],
             )),
+            Container(
+              height: 25,
+            ),
+            Center(
+                child: Row(
+              children: [
+                Container(
+                  width: 5,
+                ),
+                Container(
+                    height: 50,
+                    width: 185,
+                    child: ElevatedButton.icon(
+                      label: const Text("Captions",
+                          style: TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.bold)),
+                      icon: const Icon(
+                        Icons.closed_caption,
+                        size: 35,
+                      ),
+                      onPressed: () {},
+                      //child: Text("Download Reel"),
+                      style: ElevatedButton.styleFrom(
+                        primary: const Color.fromRGBO(136, 189, 96, 1),
+                        onPrimary: Colors.white,
+                        elevation: 10, // Elevation
+                        shadowColor: Colors.black, // Shadow Color
+                      ),
+                    )),
+                Container(
+                  width: 10,
+                ),
+              ],
+            )),
           ],
         ),
       ),
